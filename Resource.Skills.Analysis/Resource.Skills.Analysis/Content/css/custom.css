@@ -1,0 +1,25 @@
+﻿.page-content-wrapper {
+    margin-top: 20px;
+}
+.page-content {
+    padding: 0 25px;
+}
+
+.page-footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: white;
+    padding: 5px;
+}
+
+.box-home {
+    margin-bottom: 30px;
+    font-size: 19px;
+    font-weight: 200;
+    line-height: 2.1428571435;
+}
+
+.btn-xs-square {
+    padding: 3px 4px !important;
+}

@@ -1,0 +1,84 @@
+﻿<div class="page-content" ng-controller="produtoController">
+    <div ng-show="mostrarCadastroProduto">
+        <h2 class="sub-header">Cadastro/Alteração de Produto</h2>
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label for="txtDescricao" class="col-sm-2 control-label">Descrição</label>
+                <div class="col-sm-10">
+                    <input type="text" ng-model="model.desc" class="form-control" name="txtDescricao">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="txtValor" class="col-sm-2 control-label">Valor</label>
+                <div class="col-sm-10">
+                    <input type="text" ng-model="model.valor" class="form-control" name="txtValor">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="cmbCategoria" class="col-sm-2 control-label">Categoria</label>
+                <div class="col-sm-10">
+                    <select ng-model="model.idCategoria" name="cmbCategoria" class="form-control">
+                        <option ng-repeat="categoria in produtoCategorias" value="{{categoria.id}}">{{categoria.desc}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="txtCodigoManual" class="col-sm-2 control-label">Código Manual</label>
+                <div class="col-sm-10">
+                    <input type="text" ng-model="model.codigoManual" class="form-control" name="txtCodigoManual">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="txtObservacoes" class="col-sm-2 control-label">Observações</label>
+                <div class="col-sm-10">
+                    <input type="text" ng-model="model.observacoes" class="form-control" name="txtObservacoes">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button class="btn btn-default" ng-click="aoClicarVoltar()">Voltar</button>
+                    <button class="btn btn-default" ng-click="aoClicarSalvar()">Salvar</button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+    <div ng-show="mostrarListaRegistros">
+        <div>
+            <button style="float: right" class="btn btn-default" ng-click="aoClicarNovoProduto()">Novo Produto</button>
+        </div>
+        <h2 class="sub-header">Lista de registros</h2>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Descrição</th>
+                        <th>Valor</th>
+                        <th>Categoria</th>
+                        <th>Código Manual</th>
+                        <th>Observações</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="produto in produtos">
+                        <td>{{produto.id}}</td>
+                        <td>{{produto.desc}}</td>
+                        <td>{{produto.valor | currency: 'R$ '}}</td>
+                        <td>{{produto.idCategoria}}</td>
+                        <td>{{produto.codigoManual}}</td>
+                        <td>{{produto.observacoes}}</td>
+                        <td><button ng-click="aoEditarProduto(produto)" type="button" class="btn btn-xs btn-default btn-xs-square"><i class="fa fa-pencil-square-o"></i></button></td>
+                        <td>
+                            <button ng-click="aoRemoverProduto(produto)" type="button" class="btn btn-xs btn-default btn-xs-square">
+                                <i class="fa fa-trash-o"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

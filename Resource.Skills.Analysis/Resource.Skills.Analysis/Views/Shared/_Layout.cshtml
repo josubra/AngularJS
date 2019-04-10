@@ -1,0 +1,129 @@
+﻿@using Resource.Skills.Analysis.Models
+@{
+
+    var version = typeof(Resource.Skills.Analysis.MvcApplication).Assembly.GetName().Version.ToString();
+    string baseUrl = System.Configuration.ConfigurationManager.AppSettings["BaseUrl"].ToString();
+
+    List<CustomBundle> bundles = new List<CustomBundle>();
+
+    Resource.Skills.Analysis.Models.CustomBundle customBundle;
+
+    List<string> recoveryBundles = new List<string>();
+    recoveryBundles.Add("home");
+    recoveryBundles.Add("produto");
+    recoveryBundles.Add("usuario");
+
+    foreach (string controller in recoveryBundles)
+    {
+        customBundle = new Resource.Skills.Analysis.Models.CustomBundle();
+        customBundle.BundleName = controller;
+        customBundle.Path = BundleTable.Bundles.ResolveBundleUrl("~/bundles/" + controller);
+        customBundle.IsLoaded = false;
+        bundles.Add(customBundle);
+    }
+
+    BundleInformation bundleInformation = new BundleInformation();
+    bundleInformation.Bundles = bundles;
+    string bundleInformationJSON = Newtonsoft.Json.JsonConvert.SerializeObject(bundleInformation, Newtonsoft.Json.Formatting.None);
+
+}
+
+<!DOCTYPE html>
+<html ng-app="resourceSkillsAnalysis">
+<head>
+    <meta charset="utf-8" />
+    <base href="@baseUrl" />
+    @if (HttpContext.Current.IsDebuggingEnabled)
+    {
+        <debbuging value="true" />
+    }
+    else
+    {
+        <debbuging value="false" />
+    }
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title ResourceIT</title>
+    @Styles.Render("~/Content/style/styleSheet")
+</head>
+<body>
+    <nav class="navbar navbar-default" style="margin-bottom: 0 !important">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="~/Home">Home</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li><a href="~/Produto">Produtos</a></li>
+                <li><a href="~/Usuario">Usuários</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="page-content-wrapper">
+        @RenderBody()
+    </div>
+    <div class="page-footer">
+        <div class="page-footer-inner">
+            <p>ResourceIT &copy; - @DateTime.Now.Year - Avaliação de habilidades</p>
+        </div>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/angular")
+    <script src="~/Scripts/require.js"></script>
+    @if (HttpContext.Current.IsDebuggingEnabled)
+    {
+        @Scripts.RenderFormat("<script type=\"text/javascript\" src=\"{0}?ver=" + @version + "\"></script>", "~/bundles/shared")
+    }
+    else
+    {
+        @Scripts.Render("~/bundles/shared")
+    }
+    <script>
+
+        (function() {
+
+            var codeProjectApplication = angular.module('resourceSkillsAnalysis');
+            codeProjectApplication.provider('applicationConfiguration', function() {
+                var _version;
+                var _bundles;
+                return {
+                    setVersion: function(version) {
+                        _version = version;
+                    },
+                    setBundles: function(bundles) {
+                        _bundles = bundles;
+                    },
+                    getVersion: function() {
+                        return _version;
+                    },
+                    getBundles: function() {
+                        return _bundles;
+                    },
+                    $get: function() {
+                        return {
+                            version: _version,
+                            bundles: _bundles
+                        }
+                    }
+                }
+            });
+
+            codeProjectApplication.config(function(applicationConfigurationProvider) {
+                applicationConfigurationProvider.setVersion('@version');
+                applicationConfigurationProvider.setBundles('@Html.Raw(bundleInformationJSON)');
+            });
+
+        })();
+
+    </script>
+    @if (HttpContext.Current.IsDebuggingEnabled)
+    {
+        @Scripts.RenderFormat("<script type=\"text/javascript\" src=\"{0}?ver=" + @version + "\"></script>", "~/bundles/routing-debug")
+    }
+    else
+    {
+        @Scripts.Render("~/bundles/routing-production")
+    }
+    @RenderSection("scripts", required: false)
+</body>
+</html>
